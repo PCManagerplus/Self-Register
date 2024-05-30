@@ -187,13 +187,13 @@
         let audio;
         switch (type) {
             case 'success':
-                audio = new Audio('path_to_success_sound.mp3');
+                audio = new Audio('1.mp3');
                 break;
             case 'error':
-                audio = new Audio('path_to_error_sound.mp3');
+                audio = new Audio('2.wav');
                 break;
             case 'retry':
-                audio = new Audio('path_to_retry_sound.mp3');
+                audio = new Audio('3.wav');
                 break;
         }
         audio.play();
