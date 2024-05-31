@@ -31,7 +31,7 @@
     <table class="highlight centered">
         <thead>
             <tr>
-                <th>項目名</th>
+                <th>商品名</th>
                 <th>価格</th>
                 <th>数量</th>
                 <th>小計</th>
@@ -39,26 +39,34 @@
             </tr>
         </thead>
         <tbody id="cart-items">
-            <!-- 項目リスト -->
+            <!-- 商品リスト -->
         </tbody>
     </table>
     <div class="total">
         <h5>合計金額: ¥<span id="total-price">0</span></h5>
     </div>
     <div class="center-align">
-        <button class="btn waves-effect waves-light modal-trigger" data-target="add-item-modal">項目を追加</button>
-        <button class="btn waves-effect waves-light modal-trigger" data-target="checkout-modal">合計計算</button>
+        <button class="btn waves-effect waves-light modal-trigger" data-target="add-item-modal">商品を追加</button>
+        <button class="btn waves-effect waves-light modal-trigger" data-target="checkout-modal">お会計</button>
+    </div>
+    <div class="switch center-align" style="margin-top: 20px;">
+        <label>
+            音声オフ
+            <input type="checkbox" id="toggle-sound">
+            <span class="lever"></span>
+            音声オン
+        </label>
     </div>
 </div>
 
 <!-- Add Item Modal -->
 <div id="add-item-modal" class="modal">
     <div class="modal-content">
-        <h4>項目を追加</h4>
+        <h4>商品を追加</h4>
         <div class="row">
             <div class="input-field col s12">
                 <input id="item-name" type="text" class="validate">
-                <label for="item-name">項目名</label>
+                <label for="item-name">商品名</label>
             </div>
             <div class="input-field col s12">
                 <input id="item-price" type="number" step="0.01" class="validate">
@@ -78,7 +86,7 @@
 <!-- Checkout Modal -->
 <div id="checkout-modal" class="modal">
     <div class="modal-content">
-        <h4>計算方法を選択</h4>
+        <h4>お会計方法を選択</h4>
         <div class="center-align">
             <button class="btn waves-effect waves-light" onclick="showCashPayment()">現金</button>
             <button class="btn waves-effect waves-light" onclick="showElectronicPayment()">電子決済</button>
@@ -89,9 +97,9 @@
 <!-- Cash Payment Modal -->
 <div id="cash-payment-modal" class="modal">
     <div class="modal-content">
-        <h4>現金での計算</h4>
+        <h4>現金でのお支払い</h4>
         <p>合計金額: ¥<span id="cash-total-price">0</span></p>
-        <p>合計金額を確認してください。</p>
+        <p>値段と現金は定員さんにお渡しください。</p>
     </div>
     <div class="modal-footer">
         <button class="modal-close btn waves-effect waves-green" onclick="resetCart()">終了</button>
@@ -165,6 +173,11 @@
             document.getElementById('item-quantity').value = '';
             var modal = M.Modal.getInstance(document.getElementById('add-item-modal'));
             modal.close();
+
+            // バーコードリーダーの音を再生
+            if (document.getElementById('toggle-sound').checked) {
+                playSound('barcode');
+            }
         } else {
             alert('正しい情報を入力してください。');
         }
@@ -213,6 +226,9 @@
                 break;
             case 'retry':
                 audio = new Audio('3.wav');
+                break;
+            case 'barcode':
+                audio = new Audio('path_to_barcode_sound.mp3');
                 break;
         }
         if (audio) {
