@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>セルフレジ デモ</title>
+    <title>セミセルフレジ デモ</title>
     <!-- ファビコン -->
-    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="icon" type="image/png" href="favicon.png">
     <!-- Materialize CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
     <style>
@@ -27,11 +27,11 @@
 <body>
 
 <div class="container">
-    <h4 class="center-align">セルフレジ デモ</h4>
+    <h4 class="center-align">セミセルフレジ デモ</h4>
     <table class="highlight centered">
         <thead>
             <tr>
-                <th>商品名</th>
+                <th>項目名</th>
                 <th>価格</th>
                 <th>数量</th>
                 <th>小計</th>
@@ -39,26 +39,26 @@
             </tr>
         </thead>
         <tbody id="cart-items">
-            <!-- 商品リスト -->
+            <!-- 項目リスト -->
         </tbody>
     </table>
     <div class="total">
         <h5>合計金額: ¥<span id="total-price">0</span></h5>
     </div>
     <div class="center-align">
-        <button class="btn waves-effect waves-light modal-trigger" data-target="add-item-modal">商品を追加</button>
-        <button class="btn waves-effect waves-light modal-trigger" data-target="checkout-modal">お会計</button>
+        <button class="btn waves-effect waves-light modal-trigger" data-target="add-item-modal">項目を追加</button>
+        <button class="btn waves-effect waves-light modal-trigger" data-target="checkout-modal">合計計算</button>
     </div>
 </div>
 
 <!-- Add Item Modal -->
 <div id="add-item-modal" class="modal">
     <div class="modal-content">
-        <h4>商品を追加</h4>
+        <h4>項目を追加</h4>
         <div class="row">
             <div class="input-field col s12">
                 <input id="item-name" type="text" class="validate">
-                <label for="item-name">商品名</label>
+                <label for="item-name">項目名</label>
             </div>
             <div class="input-field col s12">
                 <input id="item-price" type="number" step="0.01" class="validate">
@@ -78,7 +78,7 @@
 <!-- Checkout Modal -->
 <div id="checkout-modal" class="modal">
     <div class="modal-content">
-        <h4>お会計方法を選択</h4>
+        <h4>計算方法を選択</h4>
         <div class="center-align">
             <button class="btn waves-effect waves-light" onclick="showCashPayment()">現金</button>
             <button class="btn waves-effect waves-light" onclick="showElectronicPayment()">電子決済</button>
@@ -89,9 +89,9 @@
 <!-- Cash Payment Modal -->
 <div id="cash-payment-modal" class="modal">
     <div class="modal-content">
-        <h4>現金でのお支払い</h4>
+        <h4>現金での計算</h4>
         <p>合計金額: ¥<span id="cash-total-price">0</span></p>
-        <p>値段と現金は定員さんにお渡しください。</p>
+        <p>合計金額を確認してください。</p>
     </div>
     <div class="modal-footer">
         <button class="modal-close btn waves-effect waves-green" onclick="resetCart()">終了</button>
@@ -102,10 +102,19 @@
 <div id="electronic-payment-modal" class="modal">
     <div class="modal-content">
         <h4>電子決済</h4>
+        <div class="row">
+            <div class="input-field col s12">
+                <select id="sound-select">
+                    <option value="" disabled selected>音源を選択してください</option>
+                    <option value="success">決済完了音</option>
+                    <option value="error">エラー音</option>
+                    <option value="retry">もう一度音</option>
+                </select>
+                <label>音源の選択</label>
+            </div>
+        </div>
         <div class="center-align">
-            <button class="btn waves-effect waves-light" onclick="playSound('success')">決済完了音</button>
-            <button class="btn waves-effect waves-light red" onclick="playSound('error')">エラー音</button>
-            <button class="btn waves-effect waves-light" onclick="playSound('retry')">もう一度音</button>
+            <button class="btn waves-effect waves-light" onclick="playSelectedSound()">再生</button>
         </div>
     </div>
     <div class="modal-footer">
@@ -119,6 +128,8 @@
     document.addEventListener('DOMContentLoaded', function() {
         var modals = document.querySelectorAll('.modal');
         M.Modal.init(modals);
+        var selects = document.querySelectorAll('select');
+        M.FormSelect.init(selects);
     });
 
     const cartItems = document.getElementById('cart-items');
@@ -185,6 +196,12 @@
         electronicModal.open();
     }
 
+    function playSelectedSound() {
+        const soundSelect = document.getElementById('sound-select');
+        const selectedSound = soundSelect.value;
+        playSound(selectedSound);
+    }
+
     function playSound(type) {
         let audio;
         switch (type) {
@@ -198,7 +215,11 @@
                 audio = new Audio('3.wav');
                 break;
         }
-        audio.play();
+        if (audio) {
+            audio.play();
+        } else {
+            alert('音源を選択してください');
+        }
     }
 
     function resetCart() {
