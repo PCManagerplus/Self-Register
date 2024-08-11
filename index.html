@@ -46,8 +46,8 @@
         <h5>合計金額: ¥<span id="total-price">0</span></h5>
     </div>
     <div class="center-align">
-        <button class="btn waves-effect waves-light modal-trigger" data-target="add-item-modal">商品を追加</button>
-        <button class="btn waves-effect waves-light modal-trigger" data-target="checkout-modal">お会計</button>
+        <button class="btn waves-effect waves-light modal-trigger" data-target="add-item-modal" onclick="playClickSound()">商品を追加</button>
+        <button class="btn waves-effect waves-light modal-trigger" data-target="checkout-modal" onclick="playClickSound()">お会計</button>
     </div>
     <div class="switch center-align" style="margin-top: 20px;">
         <label>
@@ -117,6 +117,8 @@
                     <option value="success">決済完了音</option>
                     <option value="error">エラー音</option>
                     <option value="retry">もう一度音</option>
+                    <option value="barcode">バーコード音</option>
+                    <option value="tick">操作音</option>
                 </select>
                 <label>音源の選択</label>
             </div>
@@ -138,10 +140,6 @@
         M.Modal.init(modals);
         var selects = document.querySelectorAll('select');
         M.FormSelect.init(selects);
-
-        // ページ内をタッチまたはクリックするたびに音を鳴らす
-        document.body.addEventListener('click', playClickSound);
-        document.body.addEventListener('touchstart', playClickSound);
     });
 
     const cartItems = document.getElementById('cart-items');
@@ -204,6 +202,7 @@
         modal.close();
         var cashModal = M.Modal.getInstance(document.getElementById('cash-payment-modal'));
         cashModal.open();
+        playClickSound();
     }
 
     function showElectronicPayment() {
@@ -211,12 +210,14 @@
         modal.close();
         var electronicModal = M.Modal.getInstance(document.getElementById('electronic-payment-modal'));
         electronicModal.open();
+        playClickSound();
     }
 
     function playSelectedSound() {
         const soundSelect = document.getElementById('sound-select');
         const selectedSound = soundSelect.value;
         playSound(selectedSound);
+        playClickSound();
     }
 
     function playSound(type) {
@@ -234,6 +235,9 @@
             case 'barcode':
                 audio = new Audio('co.mp3');
                 break;
+            case 'tick':
+                audio = new Audio('effect_tick.wav');
+                break;
         }
         if (audio) {
             audio.play();
@@ -242,16 +246,15 @@
         }
     }
 
+    function playClickSound() {
+        const clickSound = new Audio('http://onj3.andrelouis.com/phonetones/unzipped/Google/Android-0.9/ui/Effect_Tick.wav');
+        clickSound.play();
+    }
+
     function resetCart() {
         cartItems.innerHTML = '';
         total = 0;
         updateTotal();
-    }
-
-    // ページ内をタッチまたはクリックするたびに音を鳴らす
-    function playClickSound() {
-        let audio = new Audio('http://onj3.andrelouis.com/phonetones/unzipped/Google/Android-0.9/ui/Effect_Tick.wav');
-        audio.play();
     }
 </script>
 
