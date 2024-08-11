@@ -118,7 +118,6 @@
                     <option value="error">エラー音</option>
                     <option value="retry">もう一度音</option>
                     <option value="barcode">バーコード音</option>
-                    <option value="tick">操作音</option>
                 </select>
                 <label>音源の選択</label>
             </div>
@@ -235,9 +234,7 @@
             case 'barcode':
                 audio = new Audio('co.mp3');
                 break;
-            case 'tick':
-                audio = new Audio('effect_tick.wav');
-                break;
+
         }
         if (audio) {
             audio.play();
