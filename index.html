@@ -138,6 +138,10 @@
         M.Modal.init(modals);
         var selects = document.querySelectorAll('select');
         M.FormSelect.init(selects);
+
+        // ページ内をタッチまたはクリックするたびに音を鳴らす
+        document.body.addEventListener('click', playClickSound);
+        document.body.addEventListener('touchstart', playClickSound);
     });
 
     const cartItems = document.getElementById('cart-items');
@@ -242,6 +246,12 @@
         cartItems.innerHTML = '';
         total = 0;
         updateTotal();
+    }
+
+    // ページ内をタッチまたはクリックするたびに音を鳴らす
+    function playClickSound() {
+        let audio = new Audio('http://onj3.andrelouis.com/phonetones/unzipped/Google/Android-0.9/ui/Effect_Tick.wav');
+        audio.play();
     }
 </script>
 
